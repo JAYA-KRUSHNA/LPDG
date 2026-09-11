@@ -26,6 +26,9 @@ class TestReproducibility:
         """Loading the same model twice produces identical predictions."""
         import numpy as np
 
+        if not (MODEL_DIR / "current").exists():
+            pytest.skip("No trained model available (run 'make train' first)")
+
         booster1, meta1, feat1 = load_model(MODEL_DIR)
         booster2, meta2, feat2 = load_model(MODEL_DIR)
 
@@ -41,6 +44,9 @@ class TestReproducibility:
 
     def test_model_has_metadata(self):
         """Saved model includes training metadata for audit trail."""
+        if not (MODEL_DIR / "current").exists():
+            pytest.skip("No trained model available (run 'make train' first)")
+
         _, meta, _ = load_model(MODEL_DIR)
         assert "version" in meta
         assert "trained_at" in meta
