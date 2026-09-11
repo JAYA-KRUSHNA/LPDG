@@ -1,0 +1,121 @@
+week_start,rank,gateway_id,score,reason
+2026-02-02,1,0A2778A31BE3,0.4387679382926645,Risk 0.44: uptime mean; low uptime (frequent restarts); peak offline time
+2026-02-02,2,02314F9A9168,0.41955456857061685,Risk 0.42: uptime mean; total offline time; connection severity score
+2026-02-02,3,02D7623552C8,0.26981352191940167,Risk 0.27: total offline time; connection severity score; memfree mean
+2026-02-02,4,02097AB58D3C,0.16777200070200818,Risk 0.17: uptime mean; low uptime (frequent restarts); memfree mean
+2026-02-02,5,0A4E33E2692B,0.1602554547852295,Risk 0.16: uptime mean; connection severity score; total offline time
+2026-02-02,6,0AA296FF247D,0.15576164223141176,Risk 0.16: uptime mean; low uptime (frequent restarts); memfree mean
+2026-02-02,7,06787526FEB3,0.15190138451879112,Risk 0.15: uptime mean; low uptime (frequent restarts); connection severity score
+2026-02-02,8,0A7AAFDD9E11,0.14399840348856813,Risk 0.14: uptime mean; low uptime (frequent restarts); memfree mean
+2026-02-02,9,06C0D5E3BCDB,0.12711411122237598,Risk 0.13: total offline time; connection severity score; no conn importance mean
+2026-02-02,10,06F2CDBD2C41,0.12042141489582064,Risk 0.12: uptime mean; low uptime (frequent restarts); total offline time
+2026-02-02,11,0A9547C11A56,0.1181123190542076,Risk 0.12: uptime mean; low uptime (frequent restarts); total offline time
+2026-02-02,12,0E55F28AB569,0.1006147627523038,Risk 0.10: total offline time; connection severity score; peak offline time
+2026-02-02,13,0E1B6F4DBA34,0.09894572973105614,Risk 0.10: uptime mean; total offline time; connection severity score
+2026-02-02,14,022C6F326E3B,0.08249954175623223,Risk 0.08: connection severity score; no conn importance mean; total offline time
+2026-02-02,15,0AB6B45C775A,0.08140240228483081,Risk 0.08: uptime mean; connection severity score; total offline time
+2026-02-09,1,0A2778A31BE3,0.5643626396391032,Risk 0.56: uptime mean; low uptime (frequent restarts); total offline time
+2026-02-09,2,02D7623552C8,0.49475934545425737,Risk 0.49: total offline time; connection severity score; memfree mean
+2026-02-09,3,0E55F28AB569,0.3886549262451649,Risk 0.39: total offline time; connection severity score; peak offline time
+2026-02-09,4,02314F9A9168,0.36399701504959997,Risk 0.36: total offline time; uptime mean; connection severity score
+2026-02-09,5,0AA296FF247D,0.3082500953103298,Risk 0.31: uptime mean; total offline time; memfree mean
+2026-02-09,6,0ED5057ECE3F,0.23752426370530502,Risk 0.24: uptime mean; total offline time; memfree mean
+2026-02-09,7,0A7AC5BDAF86,0.23641606229752077,Risk 0.24: uptime mean; memfree mean; low memory
+2026-02-09,8,024570739DE0,0.16078850110151494,Risk 0.16: total offline time; memfree mean; low memory
+2026-02-09,9,02D49A34B2FE,0.15796119970982048,Risk 0.16: uptime mean; memfree mean; low memory
+2026-02-09,10,06787526FEB3,0.157052439563131,Risk 0.16: uptime mean; low uptime (frequent restarts); connection severity score
+2026-02-09,11,0A4E33E2692B,0.14649004216393574,Risk 0.15: uptime mean; connection severity score; total offline time
+2026-02-09,12,0ED1E9DBD593,0.14184325647050708,Risk 0.14: uptime mean; low uptime (frequent restarts); total offline time
+2026-02-09,13,06F2CDBD2C41,0.13979148341204123,Risk 0.14: uptime mean; total offline time; connection severity score
+2026-02-09,14,0E9DC914D8DF,0.13614640456202423,Risk 0.14: uptime mean; memfree mean; total offline time
+2026-02-09,15,02097AB58D3C,0.12698429083114418,Risk 0.13: uptime mean; low uptime (frequent restarts); memfree mean
+2026-02-16,1,02314F9A9168,0.32599879399409165,Risk 0.33: total offline time; uptime mean; connection severity score
+2026-02-16,2,0A2778A31BE3,0.30669097222479996,Risk 0.31: uptime mean; low uptime (frequent restarts); total offline time
+2026-02-16,3,02D7623552C8,0.3037766972994141,Risk 0.30: connection severity score; total offline time; peak offline time
+2026-02-16,4,02D49A34B2FE,0.29571410412875143,Risk 0.30: uptime mean; memfree mean; total offline time
+2026-02-16,5,0AA296FF247D,0.20892223198864981,Risk 0.21: uptime mean; total offline time; connection severity score
+2026-02-16,6,024570739DE0,0.16078850110151494,Risk 0.16: total offline time; memfree mean; low memory
+2026-02-16,7,0ED1E9DBD593,0.1516479499749091,Risk 0.15: uptime mean; low uptime (frequent restarts); total offline time
+2026-02-16,8,0E9DC914D8DF,0.1369363060047133,Risk 0.14: uptime mean; memfree mean; total offline time
+2026-02-16,9,06F2CDBD2C41,0.13617028020889432,Risk 0.14: uptime mean; total offline time; connection severity score
+2026-02-16,10,0A7AAFDD9E11,0.13503280064802015,Risk 0.14: uptime mean; low uptime (frequent restarts); memfree mean
+2026-02-16,11,02097AB58D3C,0.12218918458615025,Risk 0.12: uptime mean; low uptime (frequent restarts); total offline time
+2026-02-16,12,02892F51E1CB,0.11839694502377474,Risk 0.12: uptime mean; connection severity score; no conn importance mean
+2026-02-16,13,06787526FEB3,0.10888230234147567,Risk 0.11: uptime mean; low uptime (frequent restarts); connection severity score
+2026-02-16,14,0A7AC5BDAF86,0.10481173109325984,Risk 0.10: uptime mean; memfree mean; low memory
+2026-02-16,15,0E752F1B295C,0.1020070035161513,Risk 0.10: connection severity score; total offline time; uptime mean
+2026-02-23,1,02D7623552C8,0.4048053367400301,Risk 0.40: connection severity score; total offline time; no conn importance mean
+2026-02-23,2,02314F9A9168,0.37174730356359287,Risk 0.37: total offline time; uptime mean; connection severity score
+2026-02-23,3,0A7AC5BDAF86,0.3215767210180656,Risk 0.32: uptime mean; memfree mean; low memory
+2026-02-23,4,0A2778A31BE3,0.24396607400269227,Risk 0.24: uptime mean; low uptime (frequent restarts); total offline time
+2026-02-23,5,0E7A8A5414C2,0.21866748237764422,Risk 0.22: uptime mean; low uptime (frequent restarts); memfree mean
+2026-02-23,6,02D49A34B2FE,0.20922456547131352,Risk 0.21: uptime mean; total offline time; memfree mean
+2026-02-23,7,02F18EEE028A,0.20279487759331066,Risk 0.20: uptime mean; low uptime (frequent restarts); memfree mean
+2026-02-23,8,0AA296FF247D,0.18661987873545055,Risk 0.19: uptime mean; total offline time; connection severity score
+2026-02-23,9,0AB6B45C775A,0.18112492889924686,Risk 0.18: connection severity score; uptime mean; no conn importance mean
+2026-02-23,10,0E752F1B295C,0.16106636526424786,Risk 0.16: uptime mean; total offline time; memfree mean
+2026-02-23,11,024570739DE0,0.16078850110151494,Risk 0.16: total offline time; memfree mean; low memory
+2026-02-23,12,0ED1E9DBD593,0.15845957016510293,Risk 0.16: uptime mean; low uptime (frequent restarts); total offline time
+2026-02-23,13,06C0D5E3BCDB,0.14515098349794497,Risk 0.15: total offline time; connection severity score; no conn importance mean
+2026-02-23,14,02892F51E1CB,0.13418998849324776,Risk 0.13: uptime mean; connection severity score; no conn importance mean
+2026-02-23,15,062CA8BB55FC,0.11750607064896543,Risk 0.12: uptime mean; low uptime (frequent restarts); memfree mean
+2026-03-02,1,02D7623552C8,0.4058124812350242,Risk 0.41: connection severity score; no conn importance mean; total offline time
+2026-03-02,2,06FFEC2EFA5E,0.3420439679079306,Risk 0.34: uptime mean; total offline time; memfree mean
+2026-03-02,3,02F18EEE028A,0.32445757696704025,Risk 0.32: uptime mean; memfree mean; low memory
+2026-03-02,4,0A7AC5BDAF86,0.3194958821934472,Risk 0.32: uptime mean; memfree mean; total offline time
+2026-03-02,5,024570739DE0,0.30723843637090925,Risk 0.31: total offline time; memfree mean; low memory
+2026-03-02,6,0E7A8A5414C2,0.26878115266048913,Risk 0.27: uptime mean; low uptime (frequent restarts); memfree mean
+2026-03-02,7,060EE3CB4779,0.2333077475979531,Risk 0.23: uptime mean; low uptime (frequent restarts); connection severity score
+2026-03-02,8,02892F51E1CB,0.19609249877081356,Risk 0.20: uptime mean; connection severity score; no conn importance mean
+2026-03-02,9,06F2CDBD2C41,0.18236125515183352,Risk 0.18: uptime mean; total offline time; connection severity score
+2026-03-02,10,02D49A34B2FE,0.16323299054424537,Risk 0.16: uptime mean; connection severity score; total offline time
+2026-03-02,11,0ED1E9DBD593,0.15845957016510293,Risk 0.16: uptime mean; low uptime (frequent restarts); total offline time
+2026-03-02,12,0AA296FF247D,0.14896557839297606,Risk 0.15: uptime mean; total offline time; connection severity score
+2026-03-02,13,0E9DC914D8DF,0.14735147975700605,Risk 0.15: uptime mean; total offline time; memfree mean
+2026-03-02,14,028B24EADDAD,0.14026930872572257,Risk 0.14: uptime mean; total offline time; connection severity score
+2026-03-02,15,0A4E33E2692B,0.14010072527849476,Risk 0.14: connection severity score; uptime mean; no conn importance mean
+2026-03-09,1,02D7623552C8,0.32892623565420753,Risk 0.33: connection severity score; no conn importance mean; reboot severity
+2026-03-09,2,06F2CDBD2C41,0.27328723252480136,Risk 0.27: uptime mean; total offline time; connection severity score
+2026-03-09,3,024570739DE0,0.2618841070017234,Risk 0.26: total offline time; memfree mean; low memory
+2026-03-09,4,0E9DC914D8DF,0.2571037202412524,Risk 0.26: uptime mean; low uptime (frequent restarts); total offline time
+2026-03-09,5,0E7A8A5414C2,0.2435371846945607,Risk 0.24: uptime mean; low uptime (frequent restarts); memfree mean
+2026-03-09,6,0AFE702BB093,0.219629903048797,Risk 0.22: uptime mean; low uptime (frequent restarts); memfree mean
+2026-03-09,7,0ABC8E60F4C1,0.20799405367944152,Risk 0.21: uptime mean; total offline time; memfree mean
+2026-03-09,8,028B24EADDAD,0.20771086209366102,Risk 0.21: uptime mean; total offline time; connection severity score
+2026-03-09,9,06FFEC2EFA5E,0.1760530916717858,Risk 0.18: uptime mean; low uptime (frequent restarts); memfree mean
+2026-03-09,10,0A7AC5BDAF86,0.15651644029168676,Risk 0.16: uptime mean; memfree mean; total offline time
+2026-03-09,11,024DD3A9ADCA,0.15530514250677765,Risk 0.16: uptime mean; connection severity score; peak offline time
+2026-03-09,12,02D49A34B2FE,0.15498646814878256,Risk 0.15: uptime mean; connection severity score; total offline time
+2026-03-09,13,0ED1E9DBD593,0.15394625042190402,Risk 0.15: uptime mean; low uptime (frequent restarts); total offline time
+2026-03-09,14,0A4C884F240A,0.15305454320165493,Risk 0.15: uptime mean; memfree mean; low memory
+2026-03-09,15,0A8407CF4D85,0.14471749421424598,Risk 0.14: uptime mean; low uptime (frequent restarts); total offline time
+2026-03-16,1,02D49A34B2FE,0.3706317812877118,Risk 0.37: uptime mean; connection severity score; total offline time
+2026-03-16,2,0E9DC914D8DF,0.31533201874506556,Risk 0.32: uptime mean; low uptime (frequent restarts); total offline time
+2026-03-16,3,024570739DE0,0.30723843637090925,Risk 0.31: total offline time; memfree mean; low memory
+2026-03-16,4,0ABC8E60F4C1,0.27032859280963145,Risk 0.27: uptime mean; total offline time; peak offline time
+2026-03-16,5,06FFEC2EFA5E,0.24578597520283102,Risk 0.25: uptime mean; low uptime (frequent restarts); memfree mean
+2026-03-16,6,0EE587927263,0.23438364221439004,Risk 0.23: uptime mean; connection severity score; total offline time
+2026-03-16,7,02D7623552C8,0.19686626386741118,Risk 0.20: no conn importance mean; connection severity score; reboot severity
+2026-03-16,8,0E7A8A5414C2,0.18165257022166845,Risk 0.18: uptime mean; low uptime (frequent restarts); memfree mean
+2026-03-16,9,0A4E33E2692B,0.1758930917252815,Risk 0.18: no conn importance mean; connection severity score; total offline time
+2026-03-16,10,069A98DEEB1D,0.17269292311251444,Risk 0.17: uptime mean; low uptime (frequent restarts); memfree mean
+2026-03-16,11,06DAF11BD38F,0.17012473619610838,Risk 0.17: uptime mean; low uptime (frequent restarts); memfree mean
+2026-03-16,12,028B24EADDAD,0.16021861168309634,Risk 0.16: uptime mean; total offline time; connection severity score
+2026-03-16,13,0E752F1B295C,0.154816251601419,Risk 0.15: total offline time; uptime mean; connection severity score
+2026-03-16,14,0AFE702BB093,0.141686837391476,Risk 0.14: uptime mean; total offline time; memfree mean
+2026-03-16,15,0A9547C11A56,0.141352436078209,Risk 0.14: uptime mean; low uptime (frequent restarts); memfree mean
+2026-03-23,1,0EE587927263,0.39617587919204955,Risk 0.40: uptime mean; connection severity score; total offline time
+2026-03-23,2,024570739DE0,0.24093416736238293,Risk 0.24: total offline time; memfree mean; low memory
+2026-03-23,3,06FFEC2EFA5E,0.19160134446728636,Risk 0.19: uptime mean; low uptime (frequent restarts); memfree mean
+2026-03-23,4,0656377B3078,0.1849115271505449,Risk 0.18: uptime mean; low uptime (frequent restarts); memfree mean
+2026-03-23,5,0E9DC914D8DF,0.17365453908593734,Risk 0.17: uptime mean; low uptime (frequent restarts); total offline time
+2026-03-23,6,024DD3A9ADCA,0.1690937325630449,Risk 0.17: connection severity score; uptime mean; total offline time
+2026-03-23,7,0A4E33E2692B,0.16049815602571446,Risk 0.16: no conn importance mean; connection severity score; total offline time
+2026-03-23,8,0EC67072883C,0.15507910216583792,Risk 0.16: uptime mean; low uptime (frequent restarts); total offline time
+2026-03-23,9,028CC0AE5719,0.14984431759311634,Risk 0.15: uptime mean; low uptime (frequent restarts); memfree mean
+2026-03-23,10,02043B6BA08B,0.14853190882076742,Risk 0.15: uptime mean; total offline time; connection severity score
+2026-03-23,11,0AA296FF247D,0.13537259969374282,Risk 0.14: uptime mean; connection severity score; total offline time
+2026-03-23,12,0E7A8A5414C2,0.12483279381830949,Risk 0.12: uptime mean; low uptime (frequent restarts); memfree mean
+2026-03-23,13,0A7AAFDD9E11,0.11989528176871696,Risk 0.12: uptime mean; low uptime (frequent restarts); memfree mean
+2026-03-23,14,06F2CDBD2C41,0.11841098443981707,Risk 0.12: uptime mean; total offline time; connection severity score
+2026-03-23,15,0AFE702BB093,0.11367563536972684,Risk 0.11: uptime mean; total offline time; memfree mean

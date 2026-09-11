@@ -1,0 +1,42 @@
+# Data (104MB — not ours to share)
+/data/
+03-challenge-data.zip
+
+# Model artifacts (too large for git)
+models/*/
+!models/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Environment
+.env
+!.env.example
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Output (predictions.csv is tracked — it's the submission file)
+predictions_baseline.csv
+predictions_model.csv
+*.log
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Coverage
+htmlcov/
+.coverage
+models/current

@@ -1,0 +1,50 @@
+# LPDG Gateway Health Prediction — Default Configuration
+# All settings can be overridden via environment variables.
+
+# Cost parameters (euros)
+cost:
+  visit_cost: 380       # Cost of sending an engineer (any visit)
+  miss_cost: 600        # Cost per week of leaving a broken gateway unvisited
+  visits_per_week: 15   # Hard limit on visits per week
+
+# Scored window
+scoring:
+  first_monday: "2026-02-02"
+  num_weeks: 8
+
+# Feature engineering
+features:
+  baseline_days: 28     # Trailing window for computing baselines
+  recent_days: 7        # Recent window for trend detection
+  sigma_threshold: 3.0  # For baseline comparison (like 3-sigma)
+
+# LightGBM model hyperparameters
+model:
+  objective: binary
+  metric: binary_logloss
+  boosting_type: gbdt
+  num_leaves: 31
+  learning_rate: 0.05
+  n_estimators: 500
+  early_stopping_rounds: 50
+  min_child_samples: 10
+  subsample: 0.8
+  colsample_bytree: 0.8
+  reg_alpha: 0.1
+  reg_lambda: 0.1
+  scale_pos_weight: 1.58  # miss_cost / visit_cost = 600/380
+  random_seed: 42
+  verbose: -1
+
+# Data drift detection thresholds
+drift:
+  ks_threshold: 0.1         # KS-test p-value threshold for statistical drift
+  chi2_threshold: 0.05       # Chi-squared p-value threshold for categorical drift
+  volume_tolerance: 0.1      # 10% tolerance on expected gateway count
+  max_missing_hours: 48      # Alert if a gateway has >48h gap
+
+# Paths (overridden by environment variables)
+paths:
+  data_dir: "./data"
+  model_dir: "./models"
+  output_dir: "."

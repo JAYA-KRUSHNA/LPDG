@@ -1,0 +1,19 @@
+services:
+  gateway-health:
+    build: .
+    volumes:
+      - ./data:/app/data:ro           # Mount data read-only (never copy into image)
+      - ./models:/app/models          # Persist trained models across runs
+      - ./predictions.csv:/app/predictions.csv  # Persist predictions output
+    environment:
+      - DATA_DIR=/app/data
+      - MODEL_DIR=/app/models
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - COST_FP=${COST_FP:-380}
+      - COST_FN=${COST_FN:-600}
+      - RANDOM_SEED=${RANDOM_SEED:-42}
+    healthcheck:
+      test: ["CMD", "python", "-c", "from src.utils.config import load_config; print('healthy')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
