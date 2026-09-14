@@ -1,4 +1,4 @@
-.PHONY: all train predict validate evaluate test rollback clean help
+.PHONY: all train predict validate evaluate test rollback clean dashboard help
 
 # Default target: train, predict, and validate
 all: train predict validate
@@ -41,6 +41,11 @@ drift:
 	python -m src.data.drift
 	@echo "✓ Drift report generated."
 
+dashboard:
+	@echo "→ Generating dashboard..."
+	python -m src.dashboard.report
+	@echo "✓ Dashboard opened in browser."
+
 clean:
 	rm -f predictions.csv predictions_baseline.csv predictions_model.csv
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
@@ -58,4 +63,5 @@ help:
 	@echo "  make test       Run all tests"
 	@echo "  make rollback VERSION=v1.0.0  Rollback to a specific model version"
 	@echo "  make drift      Run data drift detection"
+	@echo "  make dashboard  Generate interactive HTML dashboard"
 	@echo "  make clean      Remove generated files"

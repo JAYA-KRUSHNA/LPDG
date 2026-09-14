@@ -31,6 +31,7 @@ venv/
 # Output (predictions.csv is tracked — it's the submission file)
 predictions_baseline.csv
 predictions_model.csv
+dashboard.html
 *.log
 
 # Notebooks checkpoints
