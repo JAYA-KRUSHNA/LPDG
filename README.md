@@ -136,6 +136,7 @@ A utility company operates **320 LoRaWAN gateways** that relay meter readings. W
 | `make evaluate` | Cost comparison vs 3σ baseline | ~10s |
 | `make test` | Run all 55 tests | ~25s |
 | `make drift` | Data drift detection report | ~5s |
+| `make dashboard` | Interactive HTML dashboard with charts | ~2s |
 | `make rollback VERSION=v1.0.0` | Rollback to a previous model | <1s |
 | `make clean` | Remove generated files | <1s |
 

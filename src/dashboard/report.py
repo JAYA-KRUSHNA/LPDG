@@ -440,6 +440,7 @@ section.visible{{opacity:1;transform:translateY(0)}}
 }}
 .section-header h2{{font-size:1.05rem;font-weight:600;color:{P["text"]}}}
 .section-header .icon{{font-size:1.2rem}}
+.section-desc{{font-size:0.8rem;color:{P["text3"]};margin:-0.6rem 0 1rem;line-height:1.5;max-width:800px}}
 
 /* ── Glass Card ───────────────────────────────────────── */
 .glass{{
@@ -615,6 +616,7 @@ section.visible{{opacity:1;transform:translateY(0)}}
 {"" if not c_cost else f'''
 <section id="cost">
   <div class="section-header"><span class="icon">💰</span><h2>Cost Comparison — Model vs 3σ Baseline</h2></div>
+  <p class="section-desc">Every visit costs €380. Every missed broken gateway costs €600/week in lost meter data. Our model selects the top 15 gateways per week that maximize catches while minimizing wasted visits. The waterfall shows how our model achieves net savings over the statistical baseline.</p>
   <div class="glass">{c_cost}</div>
 </section>
 '''}
@@ -622,6 +624,7 @@ section.visible{{opacity:1;transform:translateY(0)}}
 <!-- Analysis -->
 <section id="analysis">
   <div class="section-header"><span class="icon">🔬</span><h2>Model Analysis</h2></div>
+  <p class="section-desc"><b>Feature Importance</b> shows which signals the model relies on most — <em>meters_at_risk</em> and <em>read_rate_trend</em> dominate, confirming that declining data quality is the best predictor of gateway failure. <b>Cross-Validation</b> uses 3-fold gateway-level splits to prevent data leakage — no gateway appears in both train and validation.</p>
   <div class="grid-2">
     <div class="glass">
       <div style="font-size:0.8rem;font-weight:600;color:{P["text"]};margin-bottom:0.5rem">Feature Importance (Top 15)</div>
@@ -637,6 +640,7 @@ section.visible{{opacity:1;transform:translateY(0)}}
 <!-- Risk Trends -->
 <section>
   <div class="section-header"><span class="icon">📈</span><h2>Risk Score Trends</h2></div>
+  <p class="section-desc">The rank curve shows risk scores drop steeply after rank 5, confirming the model is confident about the worst gateways. Score distributions per week reveal whether certain weeks have more severe outliers — useful for staffing decisions.</p>
   <div class="grid-2">
     <div class="glass">
       <div style="font-size:0.8rem;font-weight:600;color:{P["text"]};margin-bottom:0.5rem">Risk Score by Rank (per Week)</div>
@@ -658,12 +662,14 @@ section.visible{{opacity:1;transform:translateY(0)}}
 <!-- Heatmap -->
 <section id="heatmap">
   <div class="section-header"><span class="icon">🗺️</span><h2>Gateway Selection Heatmap</h2></div>
+  <p class="section-desc">Gateways appearing across multiple weeks (top rows) are chronic problem devices — they may need replacement rather than repair. Gateways appearing in only 1–2 weeks may have transient issues. Bright cells indicate higher risk scores.</p>
   <div class="glass">{c_heat}</div>
 </section>
 
 <!-- Predictions Table -->
 <section id="predictions">
   <div class="section-header"><span class="icon">📋</span><h2>All {n_pred} Predictions</h2></div>
+  <p class="section-desc">Each row represents a recommended visit: 15 gateways per week, ranked by risk score. The <em>Reason</em> column provides a human-readable explanation generated from the top contributing features for that gateway. Filter by week to see individual schedules.</p>
   <div class="week-filter">
     <button class="week-btn active" onclick="filterWeek('all')">All Weeks</button>
   </div>
