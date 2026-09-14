@@ -1,212 +1,275 @@
-# 🏗️ LPDG Gateway Health Prediction System
+<p align="center">
+  <h1 align="center">🏗️ LPDG — Gateway Health Prediction</h1>
+  <p align="center">
+    <em>AI-powered predictive maintenance for LoRaWAN gateways</em><br>
+    <em>Predicting which of 320 gateways need engineer visits each week</em>
+  </p>
+</p>
 
-> **AI-powered predictive maintenance for LoRaWAN gateways** — predicting which of 320 gateways need engineer visits each week, optimizing field service costs.
-
-[![CI — Build & Test](https://github.com/JAYA-KRUSHNA/LPDG/actions/workflows/ci.yml/badge.svg)](https://github.com/JAYA-KRUSHNA/LPDG/actions)
-![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)
-![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)
-![Tests](https://img.shields.io/badge/Tests-55%20Passing-brightgreen.svg)
-![LightGBM](https://img.shields.io/badge/Model-LightGBM-green.svg)
+<p align="center">
+  <a href="https://github.com/JAYA-KRUSHNA/LPDG/actions/workflows/ci.yml">
+    <img src="https://github.com/JAYA-KRUSHNA/LPDG/actions/workflows/ci.yml/badge.svg" alt="CI">
+  </a>
+  <img src="https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white" alt="Docker">
+  <img src="https://img.shields.io/badge/Tests-55%20Passing-22c55e?logo=pytest&logoColor=white" alt="Tests">
+  <img src="https://img.shields.io/badge/Model-LightGBM-9ACD32?logo=lightgbm" alt="LightGBM">
+</p>
 
 ---
 
 ## 📊 Results at a Glance
 
-| Metric | Baseline (3σ) | Our Model | Improvement |
-|--------|:---:|:---:|:---:|
-| **Bad gateways caught** | 6 | **10** | **+67%** |
-| **Total cost** | €79,800 | **€77,400** | **-€2,400** |
+| Metric | 3σ Baseline | Our Model | Delta |
+|--------|:-----------:|:---------:|:-----:|
+| **Bad gateways caught** | 6 | **10** | **+67%** ✅ |
+| **Bad gateways missed** | 54 | **50** | −4 |
+| **Total cost (2 weeks)** | €79,800 | **€77,400** | **−€2,400** |
 | **AUC-ROC** | — | **0.888** | — |
-| **Training time** | — | **10 seconds** | — |
+| **Training time** | — | **~10 seconds** | — |
 
-> The model catches **67% more broken gateways** than the statistical baseline, translating to **€2,400 savings** per evaluation window — while respecting the 15 visits/week constraint.
+> **Bottom line:** Our model catches **67% more broken gateways** than the statistical baseline, saving **€2,400** per evaluation window — while staying within the 15 visits/week constraint.
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start (2 minutes)
 
 ### Prerequisites
-- **Docker** (recommended) or **Python 3.12+**
-- Challenge data (`03-challenge-data.zip`)
+- **Docker** (recommended) **OR** Python 3.12+
+- Challenge data file (`03-challenge-data.zip`)
 
-### 1. Set Up Data
+### Step 1 — Set Up Data
 
 ```bash
-# Extract the challenge data into the data/ directory
+git clone https://github.com/JAYA-KRUSHNA/LPDG.git
+cd LPDG
+# Extract challenge data into data/ folder
 unzip 03-challenge-data.zip -d data/
 ```
 
-Your `data/` folder should contain:
+Your `data/` folder should look like this:
 ```
 data/
-├── telemetry/                      # Parquet files with hourly gateway metrics
-├── gateway_master.csv              # Gateway metadata (332 gateways)
-├── field_visits.csv                # Historical visit outcomes (642 visits)
+├── telemetry/                      # Parquet files — hourly gateway metrics
+├── gateway_master.csv              # 332 gateways (metadata)
+├── field_visits.csv                # 642 historical visit outcomes
 ├── meter_read_success.csv          # Weekly meter read success rates
-└── engineer_review_2026-02.xlsx    # Ground truth labels (60 Schlecht / 60 Normal)
+└── engineer_review_2026-02.xlsx    # Ground truth (60 Schlecht / 60 Normal)
 ```
 
-### 2. Run the Pipeline
+### Step 2 — Run the Pipeline
 
-**With Docker (recommended — one command):**
+**Option A — Docker (one command, zero setup):**
 ```bash
-docker compose run --rm gateway-health make all
+docker compose run --rm gateway-health
 ```
 
-**Without Docker:**
+**Option B — Local Python:**
 ```bash
 pip install -r requirements.txt
 make all
 ```
 
-**Expected output:**
+**What happens:**
 ```
-→ Training model...          ✓ (10 seconds, 34 trees, 68 features)
-→ Generating predictions...  ✓ (5 seconds, 120 rows)
-→ Validating predictions...  ✓ predictions.csv: OK
+→ Training model...          ✓  10s — 34 trees, 68 features
+→ Generating predictions...  ✓   5s — 120 rows (8 weeks × 15 gateways)
+→ Validating predictions...  ✓  predictions.csv: OK
 ✓ Pipeline complete. predictions.csv is ready.
+```
+
+### Step 3 — Explore Results
+
+```bash
+make dashboard    # Opens interactive HTML dashboard in browser
+make evaluate     # Prints cost comparison: Model vs Baseline
 ```
 
 ---
 
 ## 🎯 Problem Statement
 
-A utility company operates **320 LoRaWAN gateways** that relay meter readings. When a gateway fails, meter data stops flowing — costing **€600/week** in penalties per undetected failure.
+A utility company operates **320 LoRaWAN gateways** that relay smart meter readings. When a gateway fails silently, meter data stops flowing — costing **€600/week** in penalties per undetected failure.
 
 **The constraint:** Only **15 engineer visits** can be scheduled per week.
 
-**The challenge:** Pick the 15 gateways most likely to need attention each week. Every correct pick saves €600; every wrong pick wastes €380 in visit costs.
+**The challenge:** Each week, pick the 15 gateways most likely to need attention.
 
-**Our solution:** A LightGBM classifier trained on 68 engineered features that ranks all gateways by failure risk, selecting the top 15 for weekly visits.
+| Outcome | Cost |
+|---------|------|
+| ✅ Visit a truly broken gateway | €380 (visit) — but **saves €600/week** in penalties |
+| ❌ Visit a healthy gateway | €380 wasted |
+| ❌ Miss a broken gateway | **€600/week** penalty continues |
 
----
-
-## 🏗️ Architecture
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                   5 DATA SOURCES                        │
-│  📡 Telemetry (1.4M rows)    🏭 Gateway Master (332)   │
-│  🔧 Field Visits (642)       📊 Meter Reads (7,226)    │
-│  📋 Engineer Review (120)                               │
-└──────────────────────┬──────────────────────────────────┘
-                       ▼
-┌──────────────────────────────────────────────────────────┐
-│              DATA LOADING & NORMALIZATION                │
-│  • Gateway ID normalization (hex ↔ colon format)        │
-│  • Latin-1 encoding handling (German text)              │
-│  • Schema validation & decommissioned gateway removal   │
-└──────────────────────┬──────────────────────────────────┘
-                       ▼
-┌──────────────────────────────────────────────────────────┐
-│              68-FEATURE ENGINEERING PIPELINE             │
-│                                                          │
-│  Connectivity (15)  │  Reboots (8)     │  System (6)    │
-│  LoRa/Radio (8)     │  Meter Reads (8) │  Gateway (8)   │
-│  Visit History (5)  │  Trends (10)     │                │
-└──────────────────────┬──────────────────────────────────┘
-                       ▼
-┌──────────────────────────────────────────────────────────┐
-│                  LightGBM CLASSIFIER                     │
-│  • 34 trees, 3-fold gateway-level CV                    │
-│  • scale_pos_weight = 1.58 (cost-driven)                │
-│  • Early stopping to prevent overfitting                │
-│  • AUC-ROC: 0.888 | AUC-PR: 0.339                      │
-└──────────────────────┬──────────────────────────────────┘
-                       ▼
-┌──────────────────────────────────────────────────────────┐
-│              RISK RANKING → predictions.csv              │
-│  • Score all 320 gateways per week                      │
-│  • Select top 15 by risk score                          │
-│  • Generate human-readable reasons                      │
-│  • 8 weeks × 15 gateways = 120 predictions              │
-└──────────────────────────────────────────────────────────┘
-```
+**Our approach:** Train a LightGBM classifier on 68 engineered features to rank all gateways by failure risk, then select the top 15 each week.
 
 ---
 
-## 📋 Available Commands
+## 🏗️ How It Works — Data Flow
 
-| Command | Description | Time |
-|---------|-------------|------|
-| `make all` | Train → Predict → Validate (default) | ~15s |
+```
+                         RAW DATA
+    ┌────────────────────────────────────────────────────┐
+    │  📡 Telemetry       1.4M rows (hourly metrics)     │
+    │  🏭 Gateway Master  332 gateways (metadata)        │
+    │  🔧 Field Visits    642 visits (outcomes)           │
+    │  📊 Meter Reads     7,226 rows (weekly success %)   │
+    │  📋 Engineer Review  120 labels (ground truth)      │
+    └──────────────────────┬─────────────────────────────┘
+                           ▼
+              ┌─────────────────────────┐
+              │    DATA LOADING         │
+              │  • ID normalization     │
+              │  • Latin-1 decoding     │
+              │  • Schema validation    │
+              │  • Decommissioned       │
+              │    gateway removal      │
+              └──────────┬──────────────┘
+                         ▼
+              ┌─────────────────────────┐
+              │  68 ENGINEERED FEATURES │
+              │                         │
+              │  Connectivity    (15)   │
+              │  Reboots          (8)   │
+              │  System Health    (6)   │
+              │  LoRa/Radio       (8)   │
+              │  Meter Reads      (8)   │
+              │  Gateway Info     (8)   │
+              │  Visit History    (5)   │
+              │  Trends          (10)   │
+              └──────────┬──────────────┘
+                         ▼
+              ┌─────────────────────────┐
+              │   LightGBM CLASSIFIER   │
+              │  • 34 trees             │
+              │  • 3-fold gateway CV    │
+              │  • Cost-weighted loss   │
+              │  • AUC-ROC: 0.888       │
+              └──────────┬──────────────┘
+                         ▼
+              ┌─────────────────────────┐
+              │   predictions.csv       │
+              │  • 8 weeks × 15/week    │
+              │  • Ranked by risk       │
+              │  • Human-readable       │
+              │    reasons included     │
+              └─────────────────────────┘
+```
+
+---
+
+## 📋 All Available Commands
+
+| Command | What It Does | Time |
+|---------|-------------|:----:|
+| `make all` | Train → Predict → Validate **(default)** | ~15s |
 | `make train` | Train the LightGBM model | ~10s |
 | `make predict` | Generate `predictions.csv` | ~5s |
-| `make validate` | Check predictions format | <1s |
+| `make validate` | Check `predictions.csv` format | <1s |
 | `make evaluate` | Cost comparison vs 3σ baseline | ~10s |
+| `make dashboard` | **Interactive HTML dashboard** with charts | ~2s |
 | `make test` | Run all 55 tests | ~25s |
 | `make drift` | Data drift detection report | ~5s |
-| `make dashboard` | Interactive HTML dashboard with charts | ~2s |
-| `make rollback VERSION=v1.0.0` | Rollback to a previous model | <1s |
+| `make rollback VERSION=v1.0.0` | Rollback to a previous model version | <1s |
 | `make clean` | Remove generated files | <1s |
+
+**All commands work both locally and inside Docker:**
+```bash
+# Local
+make dashboard
+
+# Docker
+docker compose run --rm gateway-health make dashboard --no-open
+```
 
 ---
 
-## 🔬 Feature Engineering Details
+## 📊 Interactive Dashboard
 
-### 68 features across 8 groups:
+Run `make dashboard` to generate a **self-contained HTML dashboard** that opens in your browser:
 
-| Group | Count | Key Features |
-|-------|:---:|---|
-| **Connectivity** | 15 | Offline duration (mean/max/sum/trend), disconnection count, 3σ anomaly hours |
-| **Reboots** | 8 | Reboot count, duration, power cycle ratio, reboot importance |
-| **System Health** | 6 | CPU load, free memory, uptime statistics |
-| **LoRa/Radio** | 8 | RX/TX packets, CRC error rate, TX success rate |
-| **Signal Quality** | 5 | RSSI/RSCP/RSRQ bad ratios, network type |
-| **Meter Reads** | 8 | Read rate, 4-week trend, meters at risk, data staleness |
-| **Gateway Info** | 8 | Age, firmware age, site type, meters installed |
-| **Visit History** | 5 | Past visits, fault rate, days since last visit |
-| **Trends** | 5 | Week-over-4-week ratio for key metrics (worsening = higher risk) |
+| Section | What It Shows |
+|---------|--------------|
+| **KPI Cards** | AUC-ROC, cost savings, catches, predictions count — animated counters |
+| **Cost Waterfall** | How our model saves €2,400 vs the 3σ baseline |
+| **Feature Importance** | Top 15 features ranked by information gain |
+| **Cross-Validation** | AUC-ROC, AUC-PR, Recall@15 with error bars |
+| **Risk Score Curves** | Per-week risk profiles showing score decay by rank |
+| **Score Distribution** | Violin plots per week showing outliers |
+| **Gateway Heatmap** | Which gateways are selected each week (color = risk) |
+| **Predictions Table** | All 120 predictions — filterable by week, color-coded scores |
 
-### Top 5 Most Important Features (by gain):
+> All charts are **fully interactive**: zoom, pan, hover for details, download as PNG.
 
-| Rank | Feature | Gain | Interpretation |
-|:---:|---------|:---:|---|
-| 🥇 | `meters_at_risk` | 3,429 | How many meters depend on this gateway |
-| 🥈 | `read_rate_trend_4w` | 1,934 | Is meter read success declining? |
-| 🥉 | `days_since_last_visit` | 1,629 | Time since last engineer check |
-| 4 | `n_past_visits` | 1,356 | How many times visited before |
-| 5 | `last_read_rate` | 869 | Current meter read success rate |
+---
+
+## 🔬 Feature Engineering (68 Features)
+
+| Group | Count | Key Features | Why It Matters |
+|-------|:-----:|---|---|
+| **Connectivity** | 15 | Offline duration, disconnection count, 3σ anomaly hours | Direct signal of gateway availability |
+| **Reboots** | 8 | Reboot count, duration, power cycle ratio | Hardware instability indicator |
+| **System Health** | 6 | CPU load, free memory, uptime | Resource exhaustion signals |
+| **LoRa/Radio** | 8 | RX/TX packets, CRC error rate, TX success rate | Communication quality |
+| **Meter Reads** | 8 | Read rate, 4-week trend, meters at risk, staleness | **Core business metric** |
+| **Gateway Info** | 8 | Age, firmware age, site type, meters installed | Static risk factors |
+| **Visit History** | 5 | Past visits, fault rate, days since last visit | Repeat offender detection |
+| **Trends** | 10 | Week-over-4-week ratio for all major metrics | Detects deterioration |
+
+### Top 5 Most Predictive Features
+
+| Rank | Feature | Why |
+|:----:|---------|-----|
+| 🥇 | `meters_at_risk` | Gateways serving more meters have higher impact when failing |
+| 🥈 | `read_rate_trend_4w` | A declining meter read rate is the strongest early warning |
+| 🥉 | `days_since_last_visit` | Longer time since last check = higher accumulated risk |
+| 4 | `n_past_visits` | Repeat visitors have chronic underlying issues |
+| 5 | `last_read_rate` | Current data quality directly measures gateway health |
 
 ---
 
 ## 🛡️ Data Integrity & Leakage Prevention
 
-| Safeguard | Implementation |
-|-----------|----------------|
-| **Temporal gap** | 21-day gap between training end and scored window start |
-| **No scored-window data in training** | Training: Sep 2025 – Jan 2026 / Scoring: Feb – Mar 2026 |
-| **Gateway-level CV** | GroupKFold ensures no gateway appears in both train & validation |
-| **Engineer review excluded** | Feb 2026 engineer review used only for validation, never for training |
-| **Decommissioned filtering** | Per-week filtering — a gateway decommissioned in Dec won't appear in Jan predictions |
+| Safeguard | How We Implement It |
+|-----------|-------------------|
+| **Temporal gap** | 21-day gap between last training week and first scored week |
+| **No future data** | Training uses Sep 2025–Jan 2026; scoring uses Feb–Mar 2026 |
+| **Gateway-level CV** | `GroupKFold` — same gateway never appears in both train & validation |
+| **Labels excluded** | Engineer review (Feb 2026) used only for evaluation, never training |
+| **Per-week filtering** | Decommissioned gateways excluded based on each week's active list |
+| **Deterministic** | Fixed seed (42), data hash tracked — same input = same output |
 
 ---
 
 ## 📦 Model Versioning & Rollback
 
-```bash
-# Models are saved with full metadata
+Every trained model is saved with full metadata for audit and reproducibility:
+
+```
 models/
 ├── v1.0.0/
-│   ├── model.lgb           # Trained LightGBM model
-│   ├── metadata.json       # Training config, metrics, data hash, timestamp
-│   └── features.json       # Feature names, importance scores
+│   ├── model.lgb           # Trained LightGBM booster
+│   ├── metadata.json       # Config, metrics, data hash, timestamp
+│   └── features.json       # Feature names + importance scores
 ├── v1.1.0/
 │   └── ...
 └── current -> v1.1.0       # Symlink to active version
-
-# Rollback to any version
-make rollback VERSION=v1.0.0
-
-# Verify rollback
-make predict    # Uses the rolled-back model
-make validate   # Confirms output is valid
 ```
 
-Each model stores:
-- **Training metadata**: timestamp, random seed, data hash, sample count
-- **CV metrics**: AUC-ROC, AUC-PR, cost metrics per fold
-- **Feature importance**: full ranking for explainability
+```bash
+# Rollback to any previous version
+make rollback VERSION=v1.0.0
+
+# Verify the rollback
+make predict      # Uses the rolled-back model
+make validate     # Confirms output format
+```
+
+Each `metadata.json` includes:
+- Training timestamp & random seed
+- SHA256 hash of training data
+- CV metrics (AUC-ROC, AUC-PR, cost per fold)
+- Feature importance ranking
 
 ---
 
@@ -216,13 +279,13 @@ Each model stores:
 make drift
 ```
 
-Detects three types of drift:
+Detects three types of drift to alert when the model may need retraining:
 
-| Check | Method | Severity |
-|-------|--------|----------|
-| **Schema drift** | Column presence/absence | 🔴 CRITICAL |
-| **Statistical drift** | KS-test per feature (p < 0.01) | 🟡 WARNING |
-| **Volume drift** | Gateway count vs expected range | 🟡 WARNING |
+| Check | Method | What It Catches |
+|-------|--------|----------------|
+| **Schema drift** | Column presence/absence | Missing or renamed telemetry fields |
+| **Statistical drift** | KS-test per feature (p < 0.01) | Distribution shifts in key metrics |
+| **Volume drift** | Gateway count vs expected range | Mass decommissioning or data loss |
 
 ---
 
@@ -232,36 +295,38 @@ Detects three types of drift:
 # Build the image
 docker compose build
 
-# Run full pipeline
-docker compose run --rm gateway-health make all
+# Run full pipeline (default)
+docker compose run --rm gateway-health
 
-# Run tests inside container
+# Run specific commands
 docker compose run --rm gateway-health make test
+docker compose run --rm gateway-health make evaluate
+docker compose run --rm gateway-health make dashboard --no-open
 
-# Run with custom parameters
-COST_FP=400 COST_FN=700 docker compose run --rm gateway-health make all
+# Override cost parameters
+COST_FP=400 COST_FN=700 docker compose run --rm gateway-health
 ```
 
-**Docker architecture:**
+**How it works:**
 - Multi-stage build (builder + runtime) for minimal image size
-- Data mounted read-only (`./data:/app/data:ro`)
-- Models persisted via volume mount (`./models:/app/models`)
-- Environment variables override all config values
+- `data/` mounted read-only — never copied into the image
+- `models/` mounted read-write — persisted between runs
+- All environment variables are configurable
 
 ---
 
-## ✅ Testing
+## ✅ Testing (55 Tests)
 
 ```bash
-make test    # 55 tests, ~25 seconds
+make test
 ```
 
-| Test Suite | Tests | What It Covers |
-|-----------|:---:|---|
-| `test_loader.py` | 13 | ID normalization, data loading, schema validation |
+| Test Suite | Tests | What It Validates |
+|-----------|:-----:|-------------------|
+| `test_loader.py` | 13 | Data loading, ID normalization, schema validation |
 | `test_features.py` | 10 | Feature engineering, trends, NaN handling |
 | `test_drift.py` | 9 | Schema, statistical, and volume drift detection |
-| `test_e2e.py` | 16 | End-to-end pipeline, format validation, cost comparison |
+| `test_e2e.py` | 16 | Full pipeline, format validation, cost comparison vs baseline |
 | `test_rollback.py` | 7 | Model versioning, rollback, reproducibility |
 
 ---
@@ -270,51 +335,54 @@ make test    # 55 tests, ~25 seconds
 
 ```
 LPDG/
-├── README.md                  # This file
-├── DECISIONS.md               # 5 key decisions with alternatives considered
-├── AI-USAGE.md                # AI tool usage disclosure
 │
-├── Dockerfile                 # Multi-stage Docker build
-├── docker-compose.yml         # One-command startup
-├── Makefile                   # All operations as simple targets
-├── requirements.txt           # Pinned Python dependencies
-├── config/default.yaml        # All hyperparameters and settings
-├── .env.example               # Environment variable template
-├── .github/workflows/ci.yml   # GitHub Actions CI pipeline
+├── README.md                      ← You are here
+├── DECISIONS.md                   ← 5 key design decisions with rationale
+├── AI-USAGE.md                    ← AI tool usage disclosure
+│
+├── Dockerfile                     ← Multi-stage Docker build
+├── docker-compose.yml             ← One-command startup
+├── Makefile                       ← All operations as simple targets
+├── requirements.txt               ← Pinned Python dependencies
+├── config/default.yaml            ← All hyperparameters & settings
+├── .env.example                   ← Environment variable template
+├── .github/workflows/ci.yml      ← GitHub Actions CI pipeline
 │
 ├── src/
 │   ├── data/
-│   │   ├── loader.py          # Data loading + ID normalization
-│   │   ├── features.py        # 68-feature engineering pipeline
-│   │   ├── labels.py          # Label construction from field visits
-│   │   └── drift.py           # Data drift detection (KS-test)
+│   │   ├── loader.py              ← Data loading + ID normalization
+│   │   ├── features.py            ← 68-feature engineering pipeline
+│   │   ├── labels.py              ← Label construction from field visits
+│   │   └── drift.py               ← Data drift detection (KS-test)
 │   ├── model/
-│   │   ├── train.py           # LightGBM training with gateway-level CV
-│   │   ├── predict.py         # Inference + human-readable reason generation
-│   │   ├── evaluate.py        # Cost-based comparison vs baseline
-│   │   └── registry.py        # Model versioning, save/load, rollback
+│   │   ├── train.py               ← LightGBM training with GroupKFold
+│   │   ├── predict.py             ← Inference + reason generation
+│   │   ├── evaluate.py            ← Cost-based model evaluation
+│   │   └── registry.py            ← Model versioning, save/load, rollback
+│   ├── dashboard/
+│   │   └── report.py              ← Interactive HTML dashboard generator
 │   └── utils/
-│       ├── config.py          # YAML + env var config loading
-│       ├── gateway_ids.py     # ID normalization (hex ↔ colon)
-│       └── logging_setup.py   # Structured logging
+│       ├── config.py              ← YAML + env var config loading
+│       ├── gateway_ids.py         ← ID normalization (hex ↔ colon)
+│       └── logging_setup.py       ← Structured logging
 │
-├── tests/                     # 55 tests across 5 suites
-├── scripts/                   # Shell script wrappers
-├── models/                    # Versioned model storage (gitignored)
+├── tests/                         ← 55 tests across 5 suites
+├── scripts/                       ← Shell script wrappers
+├── models/                        ← Versioned model storage (gitignored)
 │
-├── predictions.csv            # Final submission (120 rows)
-├── baseline_3sigma.py         # Provided 3-sigma baseline
-└── validate_submission.py     # Provided format validator
+├── predictions.csv                ← Final submission (120 rows)
+├── baseline_3sigma.py             ← Provided 3-sigma baseline
+└── validate_submission.py         ← Provided format validator
 ```
 
 ---
 
-## 🔧 Configuration
+## ⚙️ Configuration
 
-All settings in `config/default.yaml`, overridable via environment variables:
+All settings live in `config/default.yaml` and can be overridden via environment variables:
 
-| Setting | YAML Key | Env Variable | Default |
-|---------|----------|:---:|:---:|
+| Setting | Config Key | Env Variable | Default |
+|---------|-----------|:------------:|:-------:|
 | Data directory | `paths.data_dir` | `DATA_DIR` | `./data` |
 | Model directory | `paths.model_dir` | `MODEL_DIR` | `./models` |
 | Visit cost (€) | `cost.visit_cost` | `COST_FP` | 380 |
@@ -325,26 +393,28 @@ All settings in `config/default.yaml`, overridable via environment variables:
 
 ---
 
-## 🎓 Areas Covered
+## 🎓 Competency Areas Covered
 
-| Area | What We Did |
-|------|-------------|
-| **Machine Learning (E)** — PRIMARY | LightGBM classifier beating baseline on cost; 68 engineered features; gateway-level CV; feature importance analysis |
-| **Data Science (D)** | Cost-based evaluation framework; label definition from German field visit outcomes; threshold sensitivity analysis |
-| **MLOps (F)** | Model versioning with metadata; reproducibility (deterministic training, data hashing); drift detection; tested rollback; retrain pipeline |
-| **DevOps (C)** — Docker only | Containerized pipeline; one-command execution; environment-based config; GitHub Actions CI |
+| Area | What We Demonstrate |
+|------|-------------------|
+| **E — Machine Learning** (Primary) | LightGBM classifier, 68 engineered features, cost-weighted loss, gateway-level CV, feature importance analysis, beats baseline by 67% |
+| **D — Data Science** | Cost-based evaluation framework, label construction from German field visit data, threshold analysis, interactive dashboard with 7 chart types |
+| **F — MLOps** | Model versioning with metadata, deterministic training (data hashing), drift detection, tested rollback, automated retrain pipeline |
+| **C — DevOps** (Docker) | Containerized pipeline, one-command execution, environment-based config, multi-stage build, GitHub Actions CI |
 
 ---
 
 ## 📝 Key Design Decisions
 
-See [DECISIONS.md](DECISIONS.md) for detailed rationale on:
+See [DECISIONS.md](DECISIONS.md) for detailed rationale. Summary:
 
-1. **LightGBM over XGBoost/Random Forest** — faster training, native categorical support, better with small data
-2. **Gateway-level CV over temporal split** — prevents data leakage from same gateway in train+val
-3. **Cost-weighted loss over standard binary crossentropy** — missing a bad gateway (€600) costs more than a wasted visit (€380)
-4. **68 hand-crafted features over raw data** — domain knowledge outperforms auto-feature extraction on tabular data
-5. **Symlink-based model registry over MLflow** — lightweight, zero dependencies, fits the project scope
+| Decision | Why |
+|----------|-----|
+| **LightGBM** over XGBoost | Faster training, native categorical support, built-in early stopping |
+| **Gateway-level CV** over temporal split | Prevents data leakage from same gateway in train + validation |
+| **Cost-weighted loss** (scale_pos_weight=1.58) | Missing a bad gateway (€600) costs more than a wasted visit (€380) |
+| **68 hand-crafted features** over auto-extraction | Domain knowledge outperforms automated methods on tabular data |
+| **Symlink model registry** over MLflow | Lightweight, zero dependencies, fits the project scope |
 
 ---
 
