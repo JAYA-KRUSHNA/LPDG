@@ -2,9 +2,8 @@ services:
   gateway-health:
     build: .
     volumes:
-      - ./data:/app/data:ro           # Mount data read-only (never copy into image)
-      - ./models:/app/models          # Persist trained models across runs
-      - ./predictions.csv:/app/predictions.csv  # Persist predictions output
+      - ./data:/app/data:ro           # Mount data read-only
+      - ./models:/app/models          # Persist trained models
     environment:
       - DATA_DIR=/app/data
       - MODEL_DIR=/app/models
