@@ -17,7 +17,9 @@
 </p>
 
 <p align="center">
-  🎬 <strong><a href="https://drive.google.com/file/d/1t16ZdhUe7f13UEZwGnr8QrenM8gmgXX2/view?usp=sharing">▶️ Watch the Video Explanation (6 min)</a></strong><br>
+  🎬 <strong><a href="https://drive.google.com/file/d/1t16ZdhUe7f13UEZwGnr8QrenM8gmgXX2/view?usp=sharing">▶️ Watch the Video Explanation (6 min)</a></strong>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  📄 <strong><a href="23091A3251.pdf">View Resume (PDF)</a></strong><br>
   <em>Full project walkthrough — problem statement, feature engineering, model design, results, and live demo</em>
 </p>
 
