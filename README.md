@@ -79,7 +79,7 @@ make all
 
 **What happens:**
 ```
-→ Training model...          ✓  10s — 34 trees, 68 features
+→ Training model...          ✓  10s — 45 trees, 68 features
 → Generating predictions...  ✓   5s — 120 rows (8 weeks × 15 gateways)
 → Validating predictions...  ✓  predictions.csv: OK
 ✓ Pipeline complete. predictions.csv is ready.
@@ -148,7 +148,7 @@ A utility company operates **320 LoRaWAN gateways** that relay smart meter readi
                          ▼
               ┌─────────────────────────┐
               │   LightGBM CLASSIFIER   │
-              │  • 34 trees             │
+              │  • 45 trees             │
               │  • 3-fold gateway CV    │
               │  • Cost-weighted loss   │
               │  • AUC-ROC: 0.888       │
@@ -175,9 +175,12 @@ A utility company operates **320 LoRaWAN gateways** that relay smart meter readi
 | `make validate` | Check `predictions.csv` format | <1s |
 | `make evaluate` | Cost comparison vs 3σ baseline | ~10s |
 | `make dashboard` | **Interactive HTML dashboard** with charts | ~2s |
-| `make test` | Run all 55 tests | ~25s |
+| `make test` | Run all 74 tests | ~12s |
 | `make drift` | Data drift detection report | ~5s |
 | `make rollback VERSION=v1.0.0` | Rollback to a previous model version | <1s |
+| `make history` | View experiment tracking log | <1s |
+| `make compare V1=v1.0.0 V2=v1.6.0` | Side-by-side model version comparison | <1s |
+| `make audit` | View pipeline audit trail | <1s |
 | `make clean` | Remove generated files | <1s |
 
 **All commands work both locally and inside Docker:**
@@ -376,7 +379,7 @@ make test
 LPDG/
 │
 ├── README.md                      ← You are here
-├── DECISIONS.md                   ← 5 key design decisions with rationale
+├── DECISIONS.md                   ← 6 key design decisions with rationale
 ├── AI-USAGE.md                    ← AI tool usage disclosure
 │
 ├── Dockerfile                     ← Multi-stage Docker build
