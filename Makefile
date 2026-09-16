@@ -1,4 +1,4 @@
-.PHONY: all train predict validate evaluate test rollback clean dashboard help
+.PHONY: all train predict validate evaluate test rollback clean dashboard compare history audit help
 
 # Default target: train, predict, and validate
 all: train predict validate
@@ -51,6 +51,20 @@ clean:
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 	@echo "✓ Cleaned."
 
+compare:
+	@if [ -z "$(V1)" ] || [ -z "$(V2)" ]; then echo "Usage: make compare V1=v1.0.0 V2=v1.6.0"; exit 1; fi
+	python -m src.model.compare $(V1) $(V2)
+
+history:
+	@echo "→ Experiment history..."
+	python -m src.model.compare --history
+	@echo ""
+
+audit:
+	@echo "→ Pipeline audit trail..."
+	python -m src.utils.audit
+	@echo ""
+
 help:
 	@echo "LPDG Gateway Health Prediction System"
 	@echo ""
@@ -64,4 +78,7 @@ help:
 	@echo "  make rollback VERSION=v1.0.0  Rollback to a specific model version"
 	@echo "  make drift      Run data drift detection"
 	@echo "  make dashboard  Generate interactive HTML dashboard"
+	@echo "  make compare V1=v1.0.0 V2=v1.6.0  Compare two model versions"
+	@echo "  make history    Show experiment history"
+	@echo "  make audit      Show pipeline audit trail"
 	@echo "  make clean      Remove generated files"

@@ -1,6 +1,6 @@
 # DECISIONS.md
 
-Five key choices we made, with alternatives considered and reasons for each.
+Six key choices we made, with alternatives considered and reasons for each.
 
 ---
 
@@ -76,6 +76,23 @@ Five key choices we made, with alternatives considered and reasons for each.
 - **Only exclude if decommissioned before the scored window**: Three gateways were decommissioned *during* the scored window (Feb 2026). Our approach handles this correctly — we check per-week, not globally.
 
 **Why this matters**: With only 15 visits per week, wasting even one on a decommissioned gateway means missing a truly broken one. At €600 per missed fault per week, this is an expensive mistake.
+
+---
+
+## 6. Lightweight experiment tracking over MLflow/W&B
+
+**Decision**: Use a simple JSONL-based experiment log (`models/experiment_log.jsonl`) with a pre-prediction validation gate, rather than integrating MLflow, Weights & Biases, or similar tools.
+
+**Alternatives rejected**:
+- **MLflow**: Adds a tracking server dependency, database, and UI. Overkill for a project with 7 model versions and a single developer. The JSONL log provides the same traceability with zero infrastructure.
+- **Weights & Biases**: Cloud dependency, API keys, network access. Not suitable for a challenge submission that must run offline in Docker.
+- **No tracking at all**: We had 7 versions (v1.0.0 → v1.6.0) but no record of *why* each improved. The experiment log fills this gap.
+
+**Why this approach works**:
+- JSONL is append-only and human-readable — `cat models/experiment_log.jsonl | jq .`
+- The validation gate (`--skip-checks` to bypass) prevents serving predictions when the data has drifted critically
+- The audit trail (`logs/pipeline_audit.jsonl`) enables tracing any prediction back to its training run
+- All four MLOps components (tracker, comparison, gate, audit) are under 150 lines each — easy to understand and maintain
 
 ---
 

@@ -18,7 +18,9 @@ import pandas as pd
 from src.data.loader import load_all, get_active_gateways
 from src.data.features import build_features_for_week
 from src.model.registry import load_model
+from src.model.validation_gate import run_pre_prediction_checks
 from src.utils.config import load_config, get_data_dir, get_model_dir
+from src.utils.audit import log_pipeline_event
 from src.utils.logging_setup import setup_logging, get_logger
 
 logger = get_logger(__name__)
@@ -203,6 +205,8 @@ def main(argv: list[str] | None = None) -> int:
                         help="Output predictions file path")
     parser.add_argument("--config", type=pathlib.Path, default=None,
                         help="Path to config YAML")
+    parser.add_argument("--skip-checks", action="store_true",
+                        help="Skip pre-prediction validation checks")
     args = parser.parse_args(argv)
 
     config = load_config(args.config)
@@ -228,6 +232,16 @@ def main(argv: list[str] | None = None) -> int:
     logger.info("Loaded model %s (%d trees, %d features)",
                 metadata.get("version", "unknown"),
                 booster.num_trees(), len(feature_names))
+
+    # 1b. Pre-prediction validation gate
+    if not args.skip_checks:
+        passed, report = run_pre_prediction_checks(data_dir, model_dir, config)
+        logger.info("Validation gate:\n%s", report)
+        if not passed:
+            logger.error("Pre-prediction validation FAILED. Use --skip-checks to bypass.")
+            return 1
+    else:
+        logger.info("Skipping pre-prediction validation checks")
 
     # 2. Load data
     bundle = load_all(data_dir)
@@ -261,6 +275,17 @@ def main(argv: list[str] | None = None) -> int:
     logger.info("=== Predictions written to %s — %d rows over %d weeks (%.1fs) ===",
                 args.out, len(predictions),
                 predictions["week_start"].nunique(), elapsed)
+
+    # Audit trail
+    log_pipeline_event("predict", {
+        "model_version": metadata.get("version", "unknown"),
+        "n_rows": len(predictions),
+        "n_weeks": int(predictions["week_start"].nunique()),
+        "output_file": str(args.out),
+        "elapsed_seconds": round(elapsed, 1),
+        "status": "success",
+    })
+
     return 0
 
 

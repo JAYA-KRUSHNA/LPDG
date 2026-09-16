@@ -24,7 +24,9 @@ from src.data.loader import load_all, get_active_gateways
 from src.data.features import build_features_for_week
 from src.data.labels import build_training_labels, get_training_weeks
 from src.model.registry import save_model, get_next_version
+from src.model.experiment_tracker import log_experiment
 from src.utils.config import load_config, get_data_dir, get_model_dir
+from src.utils.audit import log_pipeline_event
 from src.utils.logging_setup import setup_logging, get_logger
 
 logger = get_logger(__name__)
@@ -321,6 +323,20 @@ def main(argv: list[str] | None = None) -> int:
     elapsed = time.time() - start_time
     logger.info("=== Training complete in %.1f seconds. Model saved as %s ===",
                 elapsed, version)
+
+    # Log experiment for tracking model evolution
+    log_experiment(model_dir, version, metadata, elapsed)
+
+    # Audit trail
+    log_pipeline_event("train", {
+        "version": version,
+        "n_samples": len(X),
+        "n_features": len(feature_names),
+        "data_hash": metadata["data_hash"],
+        "elapsed_seconds": round(elapsed, 1),
+        "status": "success",
+    })
+
     return 0
 
 

@@ -12,7 +12,7 @@
   </a>
   <img src="https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white" alt="Python">
   <img src="https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white" alt="Docker">
-  <img src="https://img.shields.io/badge/Tests-55%20Passing-22c55e?logo=pytest&logoColor=white" alt="Tests">
+  <img src="https://img.shields.io/badge/Tests-74%20Passing-22c55e?logo=pytest&logoColor=white" alt="Tests">
   <img src="https://img.shields.io/badge/Model-LightGBM-9ACD32?logo=lightgbm" alt="LightGBM">
 </p>
 
@@ -322,7 +322,38 @@ COST_FP=400 COST_FN=700 docker compose run --rm gateway-health
 
 ---
 
-## ✅ Testing (55 Tests)
+## 🔄 MLOps Pipeline
+
+### Experiment Tracking
+Every `make train` auto-logs metrics, config, and data hash to `models/experiment_log.jsonl`:
+```bash
+make history                              # View all training runs
+make compare V1=v1.0.0 V2=v1.6.0         # Side-by-side model comparison
+```
+
+### Pre-Prediction Validation Gate
+Before generating predictions, the pipeline automatically checks:
+- ✓ Model files exist and are consistent (model.lgb, metadata.json, features.json)
+- ✓ Feature schema matches between training and inference
+- ✓ Data drift is not CRITICAL (KS-test on key distributions)
+
+If drift is **CRITICAL**, prediction is blocked. Use `--skip-checks` to bypass.
+
+### Pipeline Audit Trail
+Every pipeline execution is logged to `logs/pipeline_audit.jsonl`:
+```bash
+make audit   # View recent pipeline events with timestamps, versions, and status
+```
+
+### Model Versioning & Rollback
+```bash
+make rollback VERSION=v1.0.0   # Instant rollback via symlink
+make predict                   # Re-generate predictions with rolled-back model
+```
+
+---
+
+## ✅ Testing (74 Tests)
 
 ```bash
 make test
@@ -335,6 +366,7 @@ make test
 | `test_drift.py` | 9 | Schema, statistical, and volume drift detection |
 | `test_e2e.py` | 16 | Full pipeline, format validation, cost comparison vs baseline |
 | `test_rollback.py` | 7 | Model versioning, rollback, reproducibility |
+| `test_mlops.py` | 19 | Experiment tracking, model comparison, validation gate, audit trail |
 
 ---
 
@@ -365,17 +397,22 @@ LPDG/
 │   │   ├── train.py               ← LightGBM training with GroupKFold
 │   │   ├── predict.py             ← Inference + reason generation
 │   │   ├── evaluate.py            ← Cost-based model evaluation
-│   │   └── registry.py            ← Model versioning, save/load, rollback
+│   │   ├── registry.py            ← Model versioning, save/load, rollback
+│   │   ├── experiment_tracker.py  ← Experiment logging (JSONL)
+│   │   ├── compare.py             ← Model version comparison CLI
+│   │   └── validation_gate.py     ← Pre-prediction safety checks
 │   ├── dashboard/
 │   │   └── report.py              ← Interactive HTML dashboard generator
 │   └── utils/
 │       ├── config.py              ← YAML + env var config loading
 │       ├── gateway_ids.py         ← ID normalization (hex ↔ colon)
+│       ├── audit.py               ← Pipeline audit trail (JSONL)
 │       └── logging_setup.py       ← Structured logging
 │
-├── tests/                         ← 55 tests across 5 suites
+├── tests/                         ← 74 tests across 6 suites
 ├── scripts/                       ← Shell script wrappers
 ├── models/                        ← Versioned model storage (gitignored)
+├── logs/                          ← Pipeline audit trail (gitignored)
 │
 ├── predictions.csv                ← Final submission (120 rows)
 ├── baseline_3sigma.py             ← Provided 3-sigma baseline
@@ -406,7 +443,7 @@ All settings live in `config/default.yaml` and can be overridden via environment
 |------|-------------------|
 | **E — Machine Learning** (Primary) | LightGBM classifier, 68 engineered features, cost-weighted loss, gateway-level CV, feature importance analysis, beats baseline by 67% |
 | **D — Data Science** | Cost-based evaluation framework, label construction from German field visit data, threshold analysis, interactive dashboard with 7 chart types |
-| **F — MLOps** | Model versioning with metadata, deterministic training (data hashing), drift detection, tested rollback, automated retrain pipeline |
+| **F — MLOps** | Model versioning with metadata, experiment tracking (JSONL log), model comparison CLI, pre-prediction validation gate, drift detection (KS-test), pipeline audit trail, tested rollback |
 | **C — DevOps** (Docker) | Containerized pipeline, one-command execution, environment-based config, multi-stage build, GitHub Actions CI |
 
 ---
@@ -422,6 +459,7 @@ See [DECISIONS.md](DECISIONS.md) for detailed rationale. Summary:
 | **Cost-weighted loss** (scale_pos_weight=1.58) | Missing a bad gateway (€600) costs more than a wasted visit (€380) |
 | **68 hand-crafted features** over auto-extraction | Domain knowledge outperforms automated methods on tabular data |
 | **Symlink model registry** over MLflow | Lightweight, zero dependencies, fits the project scope |
+| **Validation gate before predictions** | Blocks serving if drift is CRITICAL — safety over speed |
 
 ---
 

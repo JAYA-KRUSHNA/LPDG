@@ -34,6 +34,10 @@ predictions_model.csv
 dashboard.html
 *.log
 
+# Runtime logs (per-environment)
+logs/
+models/experiment_log.jsonl
+
 # Notebooks checkpoints
 .ipynb_checkpoints/
 
@@ -41,3 +45,4 @@ dashboard.html
 htmlcov/
 .coverage
 models/current
+jk_resume_extraskills1.pdf
