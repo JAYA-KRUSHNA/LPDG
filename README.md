@@ -16,6 +16,11 @@
   <img src="https://img.shields.io/badge/Model-LightGBM-9ACD32?logo=lightgbm" alt="LightGBM">
 </p>
 
+<p align="center">
+  🎬 <strong><a href="https://drive.google.com/file/d/1t16ZdhUe7f13UEZwGnr8QrenM8gmgXX2/view?usp=sharing">▶️ Watch the Video Explanation (6 min)</a></strong><br>
+  <em>Full project walkthrough — problem statement, feature engineering, model design, results, and live demo</em>
+</p>
+
 ---
 
 ## 📊 Results at a Glance
